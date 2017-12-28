@@ -229,8 +229,8 @@ summary(BN)
   KL_LS <- function(p_exact = marg1$M[["true"]],
                     iter = 10^4){
     p_ls <- LS_alg("M","H","true", "false",iter)
-    kl <- p_exact * log(p_exact/p_ls) 
-    +   (1-p_exact)*log((1-p_exact)/(1-p_ls))
+    kl <- p_exact * log(p_exact/p_ls) +   (1-p_exact)*log((1-p_exact)/(1-p_ls))
+    if(kl <0){print("Negative KL_LS!!!")}
     return(kl)
   }
   #KL divergence for the LS algorithm
@@ -238,10 +238,11 @@ summary(BN)
                     iter = 10^4){
     p_lw <- LW_alg("M","H","true", "false", iter)
     kl <- p_exact * log(p_exact/p_lw) +   (1-p_exact)*log((1-p_exact)/(1-p_lw))
+    if(kl <0){print("Negative KL_LW!!!")}
     return(kl)
   }
   
-iter.vector <- c(10^2, 5*10^2, 10^3,10^4,10^5)
+iter.vector <- c(25, 50, 10^2, 5*10^2, 10^3,10^4,10^5)
 kls.vector <- numeric(length(iter.vector))
 klw.vector <- numeric(length(iter.vector))
 for(i in 1:length(iter.vector)){
@@ -253,6 +254,7 @@ for(i in 1:length(iter.vector)){
 par(mfrow = c(1,1))
 
 plot(log10(iter.vector), kls.vector, 
+     ylim  = c(0, max( c(kls.vector, klw.vector)) ) ,
      xlab = "log10(Iterations)",
      ylab = "KL Divergence",
      col = "blue")
