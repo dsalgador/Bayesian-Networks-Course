@@ -250,7 +250,7 @@ klw.vector <- numeric(length(iter.vector))
 #   kls.vector[i] <- KL_LS(iter = iter.vector[i])
 #   klw.vector[i] <- KL_LW(iter = iter.vector[i])
 # }
-reps = 20
+reps = 10
 kls.matrix <- matrix(data = 0, nrow = length(iter.vector)
                      , ncol = reps)
 klw.matrix <- matrix(data = 0, nrow = length(iter.vector)
@@ -272,6 +272,7 @@ plot(log10(iter.vector), kls.vector,
      ylim  = c(0, max( c(kls.vector, klw.vector)) ) ,
      xlab = "log10(Iterations)",
      ylab = "KL Divergence",
+     main = "KL( P(M/H = F), P'(M/H = F) )",
      col = "blue")
 points(log10(iter.vector), klw.vector, col = "red")
 
@@ -298,9 +299,83 @@ legend("topright",
   
 #####################################  
   
+# Estimated probabilities, sampling
+reps = 10;
+
+p1ls.vector <- numeric(length(iter.vector))
+p2ls.vector <- numeric(length(iter.vector))
+
+p1lw.vector <- numeric(length(iter.vector))
+p2lw.vector <- numeric(length(iter.vector))
+
+p1ls.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                     , ncol = reps)
+p2ls.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                     , ncol = reps)
+
+p1lw.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                      , ncol = reps)
+p2lw.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                      , ncol = reps)
+
+for(i in 1:length(iter.vector)){
+  for(j in 1:reps){
+    iter = iter.vector[i]
+    p1ls.matrix[i,j] <- LS_alg("M","H","true", "false", iter)
+    p2ls.matrix[i,j] <- LS_alg("M","H","false", "true", iter)
+    p1lw.matrix[i,j] <- LW_alg("M","H","true", "false", iter)
+    p2lw.matrix[i,j] <- LW_alg("M","H","false", "true", iter)
+  }
+  p1ls.vector[i] <- mean(p1ls.matrix[i,])
+  p2ls.vector[i] <- mean(p2ls.matrix[i,])
   
+  p1lw.vector[i] <- mean(p1lw.matrix[i,])
+  p2lw.vector[i] <- mean(p2lw.matrix[i,])
   
-  
+}
+
+#dev.off()
+par(mfrow = c(1,2))
+# p1 P(M=T/H=F)
+p1_exact = 0.1875
+plot(log10(iter.vector), p1ls.vector,
+     ylim = c(min(p1ls.vector, p1lw.vector), max(p1ls.vector, p1lw.vector)),
+     col = "blue",
+     xlab = "log10(Iterations)",
+     ylab = "Average estimated probability",
+     main = "P(M=T/H=F)")
+points(log10(iter.vector), p1lw.vector, col = "red")
+
+abline(h=p1_exact, col = "black")
+
+legend("topright",
+       c("LS", "LW"), col = c( "blue", "red"),
+       bty = 'n',
+       pch = 21,
+       cex = 0.6)
+
+# p2 P(M=F/H=T)
+
+plot(log10(iter.vector), p2ls.vector,
+     ylim = c(min(p2ls.vector, p2lw.vector), max(p2ls.vector, p2lw.vector)),
+     col = "blue",
+     xlab = "log10(Iterations)",
+     ylab = "Average estimated probability",
+     main = "P(M=F/H=T)")
+points(log10(iter.vector), p2lw.vector, col = "red")
+
+abline(h=0.7922078, col = "black")
+
+legend("bottomright",
+       c("LS", "LW"), col = c( "blue", "red"),
+       bty = 'n',
+       pch = 21,
+       cex = 0.6)
+
+
+
+
+######################################
   
   
 ####################################################
