@@ -29,8 +29,8 @@ plist <- compileCPT(nodes)
 BN<-grain(plist)
 summary(BN)
 # The graph:
-#BN.plot=plot(BN)
-#BN.plot
+BN.plot=plot(BN)
+BN.plot
 
 
 #################
@@ -65,7 +65,7 @@ summary(BN)
     else{return("false");}
   }
   
-  run_iterations = 10^4
+  run_iterations = 10^6
   
   #LS Algorithm for a single evidence and the particular
   #BN from the current exercise.
@@ -222,7 +222,8 @@ summary(BN)
   # and also for the LW algorithm. Compare them.
   
   #Which algorithm seems to be better?
-  # 
+  # this question is answered after a plot for fr KL
+  # divergences is generated.
   
   p_exact <- marg1$M[["true"]]
   #KL divergence for the LS algorithm
@@ -242,15 +243,29 @@ summary(BN)
     return(kl)
   }
   
-iter.vector <- c(25, 50, 10^2, 5*10^2, 10^3,10^4,10^5)
+iter.vector <- c(10^2, 2*10^2, 3*10^2, 5*10^2, 10^3,4*10^3,10^4)
 kls.vector <- numeric(length(iter.vector))
 klw.vector <- numeric(length(iter.vector))
-for(i in 1:length(iter.vector)){
-  kls.vector[i] <- KL_LS(iter = iter.vector[i])
-  klw.vector[i] <- KL_LW(iter = iter.vector[i])
-}
+# for(i in 1:length(iter.vector)){
+#   kls.vector[i] <- KL_LS(iter = iter.vector[i])
+#   klw.vector[i] <- KL_LW(iter = iter.vector[i])
+# }
+reps = 20
+kls.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                     , ncol = reps)
+klw.matrix <- matrix(data = 0, nrow = length(iter.vector)
+                     , ncol = reps)
 
-#dev.off()
+for(i in 1:length(iter.vector)){
+    for(j in 1:reps){
+      kls.matrix[i,j] <- KL_LS(iter = iter.vector[i])
+      klw.matrix[i,j] <- KL_LW(iter = iter.vector[i])
+    }
+    kls.vector[i] <- mean(kls.matrix[i,])
+    klw.vector[i] <- mean(klw.matrix[i,])
+  }
+
+dev.off()
 par(mfrow = c(1,1))
 
 plot(log10(iter.vector), kls.vector, 
@@ -268,16 +283,28 @@ legend("topright",
        cex = 1)
   
   
+#ANSWER/Discussion:
+  # * For small number of iterations (<10^3) the LW method
+  # seems to converge earlier to the exact solution.
+  
+  # * However, for larger number of iterations (>10^3) the
+  # LS method seems to be closer (smaller divergence) to the
+  # exact solution.
+
+  # * Thus, we would say that the LW algorithm converges
+  # faster if the number of iterations is relatively small,
+  # but the LS method seems to approach more to the exact
+  # solution as the number of interations increases.
+  
+#####################################  
   
   
   
   
   
   
-  
-  
-  
-  
+####################################################
+
   ##AT THE BEGINNING I STARTED TRYING TO CODE A GENERAL ALGORITHM:
   
   # LS_alg <- function(plist = plist,
