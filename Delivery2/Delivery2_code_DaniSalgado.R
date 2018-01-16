@@ -127,7 +127,8 @@ BN.plot
                      evid.node = "H",
                      pred.value = "true", 
                      evid.value = "false",
-                     iterations = 10){
+                     iterations = run_iterations
+                     ){
     
     count.pred_evid = 0; count.evid = 0;
     likelihood.e <-0
