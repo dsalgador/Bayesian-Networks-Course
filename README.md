@@ -1,5 +1,7 @@
 # Bayesian-Networks-Course
 
+* Author: Daniel Salgado Rojo, daniel.salgado@e-campus.uab.cat
+
 Master:	MODELLING	FOR	SCIENCE	AND	
 ENGINEERING, UAB, 2017/2018
 
