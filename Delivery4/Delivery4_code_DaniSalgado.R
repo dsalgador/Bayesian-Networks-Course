@@ -48,8 +48,8 @@ par(mfrow = c(1,1))
   print("CPT of Y = 1");print(coef$Z[,,2]) 
 
 #Estimations of the parameters:
-  theta_11 = coef$X[2]
-  theta_21 = coef$Y[2]
+  theta_11 = coef$X[[2]]
+  theta_21 = coef$Y[[2]]
   
   theta_31 = coef$Z[2,2,2]    #P(Z = 1 / X = 1, Y = 1)
   theta_32 = coef$Z[2,1,2]   #P(Z = 1 / X = 0, Y = 1)
@@ -77,6 +77,19 @@ par(mfrow = c(1,1))
   
   print(net.pred.estimated)
   
+#Estimations of the parameters:
+  #P(Z=1)
+  theta_11.pred = coef.pred$Z[[2]]
+  #P(Y =1 / Z=1)
+  theta_21.pred = coef.pred$Y[2,2]
+  #P(Y=1/ Z=0)
+  theta_22.pred = coef.pred$Y[2,1]
+  
+  #P(X =1 / Z=1)
+  theta_31.pred = coef.pred$X[2,2]
+  #P(X=1/ Z=0)
+  theta_32.pred = coef.pred$X[2,1] 
+    
 ################################
 # Example to compare the two cases
 #################################
@@ -86,7 +99,7 @@ par(mfrow = c(1,1))
   
   predictors <-c("X")
   values <- c(1)
-  eevvii <- matrix(values, nrow = 1, byrow = T)
+  eevvii <- matrix(values, nrow = length(values), byrow = T)
   colnames(eevvii) <- predictors
   evi <- as.data.frame(eevvii)
   responses <- c("Z")
@@ -116,3 +129,28 @@ print("How do differ both bayesian networks?")
 print(all.equal(net.estimated, net.pred.estimated))
 print("Are both networks predicting the same and with the same CL?")
 print(all.equal(pp.estimated, pp.pred.estimated))
+print("Network predictions:")
+print("Structure given preds:"); print(pp.estimated$pred[[1]] )
+print("Structure learned preds:"); print(pp.pred.estimated$pred[[1]] )
+
+print("Structure given CL:"); print(pp.estimated$pEvidence[[1]] )
+print("Structure learned CL:"); print(pp.pred.estimated$pEvidence[[1]] )
+
+
+#Observation: although the structures are different, if we try different
+#queries we see that the predictions with both BBNN are the same.
+
+#Estimated parameters:
+
+#(A)
+print("Parameters BNA")
+param <- matrix(c(theta_11, theta_21, theta_31, theta_32, theta_33, theta_34)
+                     , nrow=1)
+colnames(param) <- c("theta11", "theta21", "theta31","theta32","theta33","theta34")
+print(param)
+
+#(B)
+print("Parameters BNB")
+param.pred <- matrix(c(theta_11.pred, theta_21.pred, theta_22.pred, theta_31.pred, theta_32.pred), nrow=1)
+colnames(param.pred) <- c("theta11", "theta21","theta22","theta31","theta32")
+print(param.pred)
