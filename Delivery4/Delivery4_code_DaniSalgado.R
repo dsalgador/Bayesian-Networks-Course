@@ -4,6 +4,8 @@ library(Rgraphviz)
 #install.packages("bnlearn")
 library(bnlearn)
 
+#path where 'datos_generados_ejercicio_7.rdata' is located
+path = "C:/Users/Daniel/Dropbox/Master/Data Visualization/PART3/Delivery4"
 par(mfrow = c(1,1))
 
 #########################################
@@ -26,6 +28,7 @@ par(mfrow = c(1,1))
   
 #Load the data
   #getwd()
+    setwd(path)
     load("datos_generados_ejercicio_7.rdata")  
     data <- datos_generados_ejercicio_7
     data <- data[complete.cases(data),]
@@ -55,9 +58,20 @@ par(mfrow = c(1,1))
   theta_32 = coef$Z[2,1,2]   #P(Z = 1 / X = 0, Y = 1)
   theta_33 = coef$Z[2,2,1]    #P(Z = 1 / X = 1, Y = 0)
   theta_34 = coef$Z[2,1,1]   #P(Z = 1 / X = 0, Y = 0)
-  
- 
+
+print("Estimated parameters")
+  param <- matrix(c(theta_11, theta_21, theta_31, theta_32, theta_33, theta_34)
+                  , nrow=1)  
+colnames(param) <- c("theta11", "theta21", "theta31","theta32","theta33","theta34")
+print(param)  
+
+#       theta11  theta21   theta31   theta32   theta33   theta34
+#[1,] 0.3928571 0.702381 0.8151261 0.3806818 0.6956522 0.2531646
+
+
+
 ###################################################################
+# Extra work just to practise
 ###################################################################
 
 #########################################
@@ -142,14 +156,14 @@ print("Structure learned CL:"); print(pp.pred.estimated$pEvidence[[1]] )
 
 #Estimated parameters:
 
-#(A)
+#(A) WE KNOW STRUCTURE --> WE ESTIMATE PARAMETERS
 print("Parameters BNA")
 param <- matrix(c(theta_11, theta_21, theta_31, theta_32, theta_33, theta_34)
                      , nrow=1)
 colnames(param) <- c("theta11", "theta21", "theta31","theta32","theta33","theta34")
 print(param)
 
-#(B)
+#(B) WE ESTIMATE BOTH PARAMETERS AND STRUCTURE
 print("Parameters BNB")
 param.pred <- matrix(c(theta_11.pred, theta_21.pred, theta_22.pred, theta_31.pred, theta_32.pred), nrow=1)
 colnames(param.pred) <- c("theta11", "theta21","theta22","theta31","theta32")
