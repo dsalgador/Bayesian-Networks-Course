@@ -1,5 +1,7 @@
 # Bayesian-Networks-Course
 
+* Author: Daniel Salgado Rojo, daniel.salgado@e-campus.uab.cat
+
 Master:	MODELLING	FOR	SCIENCE	AND	
 ENGINEERING, UAB, 2017/2018
 
@@ -19,3 +21,6 @@ are graphical structures for representing the probabilistic relationships among 
 probabilistic inference with those variables, with a huge number of application fields. One of the objectives of this course 
 is to introduce them and develop in students some skill in their use in modelling, both from a theoretical and applied point of view, 
 with particular emphasis on the use of appropriate software.
+
+## License
+The deliveries, both the repots in pdf format and the scripts in R lenaguage, are INDIVIDUAL deliveries. So they must not be copied by students from the Master's that are not the athors of this repository.
